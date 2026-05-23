@@ -10,3 +10,7 @@ chatbot_env/
 .venv
 env/
 venv/
+
+# Private SQLite databases
+arogya_health.db
+*.db
