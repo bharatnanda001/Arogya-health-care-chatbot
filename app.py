@@ -208,6 +208,19 @@ st.markdown("""
             font-family: 'Outfit', 'Inter', -apple-system, sans-serif;
         }
         
+        /* Force dark text for all basic typography globally to prevent white-on-white text issues */
+        .stApp p, 
+        .stApp label, 
+        .stApp li, 
+        .stApp strong,
+        .stApp span:not(.engine-badge-gemini):not(.engine-badge-local):not([data-baseweb="tab"]):not(.st-badge):not(button *):not([role="button"] *) {
+            color: #1e293b !important;
+        }
+        
+        .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6 {
+            color: #0f172a !important;
+        }
+        
         /* Force dark text for all checkboxes, radios, selectboxes, and widget inputs */
         div[data-testid="stCheckbox"] label,
         div[data-testid="stCheckbox"] p,
@@ -229,8 +242,62 @@ st.markdown("""
         
         /* Ensure normal markdown texts inside body also render dark */
         div[data-testid="stMarkdownContainer"] p,
-        div[data-testid="stMarkdownContainer"] li {
+        div[data-testid="stMarkdownContainer"] li,
+        div[data-testid="stMarkdownContainer"] span,
+        div[data-testid="stMarkdownContainer"] strong {
             color: #334155 !important;
+        }
+        
+        /* Custom styles to force white backgrounds and dark text inside input boxes, select boxes, and textareas */
+        input, textarea, select, 
+        div[data-baseweb="input"], 
+        div[data-baseweb="select"],
+        div[data-baseweb="input"] input,
+        div[data-baseweb="select"] div {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            border-color: #cbd5e1 !important;
+        }
+        
+        /* Selectbox value color override */
+        div[data-baseweb="select"] span, 
+        div[data-baseweb="select"] div[aria-selected="true"] {
+            color: #0f172a !important;
+        }
+        
+        /* Input placeholder color override */
+        input::placeholder, textarea::placeholder {
+            color: #94a3b8 !important;
+        }
+        
+        /* Step buttons inside number input elements (+ and -) */
+        div[data-testid="stNumberInputStepDown"] button,
+        div[data-testid="stNumberInputStepUp"] button {
+            background-color: #f1f5f9 !important;
+            color: #475569 !important;
+            border: 1px solid #cbd5e1 !important;
+        }
+        
+        div[data-testid="stNumberInputStepDown"] button:hover,
+        div[data-testid="stNumberInputStepUp"] button:hover {
+            background-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+        
+        /* Dropdown listbox items (Selectbox options) */
+        div[role="listbox"], ul[role="listbox"] {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            border: 1px solid #cbd5e1 !important;
+        }
+        
+        li[role="option"] {
+            color: #0f172a !important;
+        }
+        
+        li[role="option"]:hover, li[aria-selected="true"] {
+            background-color: #f0f9ff !important;
+            color: #0284c7 !important;
         }
         
         /* Soothing white clinical sidebar */
