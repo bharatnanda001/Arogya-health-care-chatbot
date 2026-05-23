@@ -8,6 +8,13 @@ import logging
 import sqlite3
 import os
 
+# Secure server-side environment configurations
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 # Try importing google-generativeai for premium Gemini support
 try:
     import google.generativeai as genai
@@ -850,12 +857,21 @@ def main():
         
         if engine_mode == "Cloud Gemini Premium":
             default_key = os.environ.get("GEMINI_API_KEY", "")
-            api_key = st.text_input(
-                "Google Gemini API Key",
-                type="password",
-                value=default_key,
-                help="Insert your Gemini API key. Responses are processed securely on your local browser session."
-            )
+            if default_key:
+                api_key = default_key
+                st.markdown("""
+                    <div style='background-color:#f0fdf4; border:1px solid #bbf7d0; padding:12px; border-radius:12px; font-size:13px; color:#16a34a; line-height:1.5; margin-bottom: 15px;'>
+                        🛡️ <b>Secure Server Key Loaded</b><br>
+                        <span style='color: #64748b; font-size: 11px;'>Your API key is safe inside server environment configuration and completely hidden from inspect element.</span>
+                    </div>
+                """, unsafe_allow_html=True)
+            else:
+                api_key = st.text_input(
+                    "Google Gemini API Key",
+                    type="password",
+                    value="",
+                    help="Insert your Gemini API key. To protect it from browser inspection, save it as GEMINI_API_KEY inside a local .env file."
+                )
             
             if not HAS_GEMINI:
                 st.error("⚠️ The 'google-generativeai' package is not installed. Please launch the app using 'run.bat' to install it automatically or run 'pip install google-generativeai' in your environment.")
