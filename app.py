@@ -208,6 +208,31 @@ st.markdown("""
             font-family: 'Outfit', 'Inter', -apple-system, sans-serif;
         }
         
+        /* Force dark text for all checkboxes, radios, selectboxes, and widget inputs */
+        div[data-testid="stCheckbox"] label,
+        div[data-testid="stCheckbox"] p,
+        div[data-testid="stRadio"] label,
+        div[data-testid="stRadio"] p,
+        div[data-testid="stSelectbox"] label,
+        div[data-testid="stSelectbox"] p,
+        div[data-testid="stSlider"] label,
+        div[data-testid="stSlider"] p,
+        div[data-testid="stNumberInput"] label,
+        div[data-testid="stNumberInput"] p,
+        div[data-testid="stTextInput"] label,
+        div[data-testid="stTextInput"] p,
+        div[data-testid="stTextArea"] label,
+        div[data-testid="stTextArea"] p,
+        label[data-testid="stWidgetLabel"] p {
+            color: #1e293b !important;
+        }
+        
+        /* Ensure normal markdown texts inside body also render dark */
+        div[data-testid="stMarkdownContainer"] p,
+        div[data-testid="stMarkdownContainer"] li {
+            color: #334155 !important;
+        }
+        
         /* Soothing white clinical sidebar */
         [data-testid="stSidebar"] {
             background-color: #ffffff !important;
