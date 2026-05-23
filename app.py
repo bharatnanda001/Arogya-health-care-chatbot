@@ -451,7 +451,6 @@ st.markdown("""
             box-shadow: 0 4px 10px rgba(14, 165, 233, 0.15);
         }
         
-        /* Chat messages customizations */
         .stChatMessage {
             background-color: transparent !important;
             padding: 0px !important;
@@ -466,6 +465,11 @@ st.markdown("""
             font-size: 1.05rem !important;
             line-height: 1.6 !important;
             border: 1px solid #e2e8f0 !important;
+        }
+        /* Force dark text for all chat message sub-elements to ensure 100% legibility inside white bubbles */
+        div[data-testid="stChatMessageContent"] *,
+        .stChatMessageContent * {
+            color: #1e293b !important;
         }
         
         /* Vitals custom metric boxes */
