@@ -1,0 +1,12 @@
+# Ignored private study sheets
+interview_prep_guide.md
+
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+chatbot_env/
+.env
+.venv
+env/
+venv/
