@@ -1,5 +1,5 @@
-# AI Healthcare Chatbot
-This project is an AI-powered healthcare chatbot designed to assist users by answering health-related queries, analyzing symptoms, and providing preliminary medical insights. It integrates a pre-trained AI model (Flan-T5-Large) along with a medical knowledge base to enhance response accuracy.
+# Arogya - AI Healthcare Chatbot
+This project is an AI-powered healthcare chatbot, named **Arogya**, designed to assist users by answering health-related queries, analyzing symptoms, and providing preliminary medical insights. It integrates a pre-trained AI model (Flan-T5-Large) along with a medical knowledge base to enhance response accuracy.
 
 ## Features
 + Provides AI-generated responses to health-related queries
@@ -10,8 +10,8 @@ This project is an AI-powered healthcare chatbot designed to assist users by ans
 
 ## Installation and Setup
 1. **Clone the Repository**<br>
-   git clone https://github.com/Agent-A345/AI-Healthcare-Chatbot.git<br> 
-   cd AI-Healthcare-Chatbot<br>   
+   git clone https://github.com/Agent-A345/Arogya.git<br> 
+   cd Arogya<br>   
 2. **Create a Virtual Environment (Optional)**<br>
    python -m venv chatbot_env<br>
    
