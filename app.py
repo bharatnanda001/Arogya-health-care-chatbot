@@ -35,97 +35,102 @@ st.set_page_config(
 
 # ----------------- SQLITE DATABASE ENGINE -----------------
 def init_db():
-    conn = sqlite3.connect("arogya_health.db", check_same_thread=False)
-    cursor = conn.cursor()
-    # Profiles table (Patient longitudinal memory)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS profiles (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            age INTEGER,
-            gender TEXT,
-            allergies TEXT,
-            chronic_diseases TEXT,
-            medications TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    # Vitals tracking logs
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS vitals_history (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            bmi REAL,
-            bmi_status TEXT,
-            water_target REAL,
-            caloric_maintenance INTEGER,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    # Triage logs
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS triage_logs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            symptoms TEXT,
-            score INTEGER,
-            level TEXT,
-            conditions TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    conn.commit()
-    return conn
+    with sqlite3.connect("arogya_health.db", check_same_thread=False) as conn:
+        cursor = conn.cursor()
+        # Profiles table (Patient longitudinal memory)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS profiles (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT,
+                age INTEGER,
+                gender TEXT,
+                allergies TEXT,
+                chronic_diseases TEXT,
+                medications TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        # Vitals tracking logs
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS vitals_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                bmi REAL,
+                bmi_status TEXT,
+                water_target REAL,
+                caloric_maintenance INTEGER,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        # Triage logs
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS triage_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                symptoms TEXT,
+                score INTEGER,
+                level TEXT,
+                conditions TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        conn.commit()
 
-# Establish persistent database connection
-db_conn = init_db()
+# Establish persistent database structure
+init_db()
 
 def load_profile():
-    cursor = db_conn.cursor()
-    cursor.execute("SELECT name, age, gender, allergies, chronic_diseases, medications FROM profiles ORDER BY id DESC LIMIT 1")
-    row = cursor.fetchone()
-    if row:
-        return {
-            "name": row[0],
-            "age": row[1],
-            "gender": row[2],
-            "allergies": row[3],
-            "chronic_diseases": row[4],
-            "medications": row[5]
-        }
-    return None
+    with sqlite3.connect("arogya_health.db", check_same_thread=False) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT name, age, gender, allergies, chronic_diseases, medications FROM profiles ORDER BY id DESC LIMIT 1")
+        row = cursor.fetchone()
+        if row:
+            return {
+                "name": row[0],
+                "age": row[1],
+                "gender": row[2],
+                "allergies": row[3],
+                "chronic_diseases": row[4],
+                "medications": row[5]
+            }
+        return None
 
 def save_profile(name, age, gender, allergies, chronic_diseases, medications):
-    cursor = db_conn.cursor()
-    cursor.execute("""
-        INSERT INTO profiles (name, age, gender, allergies, chronic_diseases, medications)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """, (name, age, gender, allergies, chronic_diseases, medications))
-    db_conn.commit()
+    with sqlite3.connect("arogya_health.db", check_same_thread=False) as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO profiles (name, age, gender, allergies, chronic_diseases, medications)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (name, age, gender, allergies, chronic_diseases, medications))
+        conn.commit()
 
 def log_vitals(bmi, status, water, calories):
-    cursor = db_conn.cursor()
-    cursor.execute("""
-        INSERT INTO vitals_history (bmi, bmi_status, water_target, caloric_maintenance)
-        VALUES (?, ?, ?, ?)
-    """, (bmi, status, water, calories))
-    db_conn.commit()
+    with sqlite3.connect("arogya_health.db", check_same_thread=False) as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO vitals_history (bmi, bmi_status, water_target, caloric_maintenance)
+            VALUES (?, ?, ?, ?)
+        """, (bmi, status, water, calories))
+        conn.commit()
 
 def get_vitals_history():
-    cursor = db_conn.cursor()
-    cursor.execute("SELECT bmi, bmi_status, water_target, caloric_maintenance, created_at FROM vitals_history ORDER BY id DESC LIMIT 5")
-    return cursor.fetchall()
+    with sqlite3.connect("arogya_health.db", check_same_thread=False) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT bmi, bmi_status, water_target, caloric_maintenance, created_at FROM vitals_history ORDER BY id DESC LIMIT 5")
+        return cursor.fetchall()
 
 def log_triage(symptoms, score, level, conditions):
-    cursor = db_conn.cursor()
-    cursor.execute("""
-        INSERT INTO triage_logs (symptoms, score, level, conditions)
-        VALUES (?, ?, ?, ?)
-    """, (symptoms, score, level, conditions))
-    db_conn.commit()
+    with sqlite3.connect("arogya_health.db", check_same_thread=False) as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO triage_logs (symptoms, score, level, conditions)
+            VALUES (?, ?, ?, ?)
+        """, (symptoms, score, level, conditions))
+        conn.commit()
 
 def get_triage_history():
-    cursor = db_conn.cursor()
-    cursor.execute("SELECT symptoms, score, level, created_at FROM triage_logs ORDER BY id DESC LIMIT 5")
-    return cursor.fetchall()
+    with sqlite3.connect("arogya_health.db", check_same_thread=False) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT symptoms, score, level, created_at FROM triage_logs ORDER BY id DESC LIMIT 5")
+        return cursor.fetchall()
 
 # ----------------- TRUSTED MEDICAL RAG DATABASE -----------------
 TRUSTED_GUIDELINES = [
@@ -762,14 +767,22 @@ Response:"""
             
             inputs = tokenizer(prompt, return_tensors="pt").to(device)
             
+            # Construct generation arguments dynamically to prevent ValueError when do_sample=False
+            gen_kwargs = {
+                "max_length": 250,
+                "min_length": 25,
+                "repetition_penalty": 1.15,
+            }
+            if temperature > 0.05:
+                gen_kwargs["do_sample"] = True
+                gen_kwargs["temperature"] = temperature
+            else:
+                gen_kwargs["do_sample"] = False
+                
             with torch.no_grad():
                 outputs = model.generate(
                     **inputs,
-                    max_length=250,
-                    min_length=25,
-                    temperature=temperature,
-                    repetition_penalty=1.15,
-                    do_sample=True if temperature > 0.05 else False
+                    **gen_kwargs
                 )
                 
             response_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
@@ -817,7 +830,11 @@ def main():
         with st.expander("Update Clinical File", expanded=False):
             new_name = st.text_input("Full Name", value=p_name)
             new_age = st.number_input("Age", min_value=1, max_value=120, value=p_age)
-            new_gender = st.selectbox("Gender", ["Male", "Female", "Other"], index=["Male", "Female", "Other"].index(p_gender))
+            try:
+                gender_index = ["Male", "Female", "Other"].index(p_gender)
+            except ValueError:
+                gender_index = 0
+            new_gender = st.selectbox("Gender", ["Male", "Female", "Other"], index=gender_index)
             new_allergies = st.text_area("Allergies (e.g., Penicillin)", value=p_allergies)
             new_chronic = st.text_area("Chronic Conditions (e.g., Asthma)", value=p_chronic)
             new_meds = st.text_area("Active Medications", value=p_meds)
@@ -1092,8 +1109,11 @@ def main():
             with st.container(border=True):
                 st.markdown("<h4 style='color: #0284c7; margin-top: 0px;'>🔥 Caloric Energy Calculator</h4>", unsafe_allow_html=True)
                 
-                age = st.number_input("Age (Years)", min_value=1, max_value=120, value=25)
-                gender = st.radio("Biological Gender", ["Male", "Female"], horizontal=True)
+                # Sync default values from active clinical profile to improve integrated UX
+                default_cal_gender = p_gender if p_gender in ["Male", "Female"] else "Male"
+                cal_gender_index = ["Male", "Female"].index(default_cal_gender)
+                age = st.number_input("Age (Years)", min_value=1, max_value=120, value=p_age)
+                gender = st.radio("Biological Gender", ["Male", "Female"], index=cal_gender_index, horizontal=True)
                 c_height = st.number_input("Height (cm)", min_value=50, max_value=250, value=170, key="cal_h")
                 c_weight = st.number_input("Weight (kg)", min_value=10, max_value=250, value=70, key="cal_w")
                 c_activity = st.selectbox(
